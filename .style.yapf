@@ -1,0 +1,6 @@
+[style]
+blank_line_before_nested_class_or_def = false
+blank_lines_around_top_level_definition = 1
+column_limit = 100
+continuation_align_style = fixed
+use_tabs = true
