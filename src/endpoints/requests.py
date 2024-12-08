@@ -12,7 +12,7 @@ class AcceptRequest(endpoint.Endpoint):
 	@typing.override
 	def run(self, data: database.RequestData) -> endpoint.Result:
 		if data.user is None:
-			return endpoint.error("invalid token")
+			return endpoint.error("invalid token", http.HTTPStatus.UNAUTHORIZED)
 
 		try:
 			sender = int(data.get("sender"))
@@ -32,7 +32,7 @@ class CreateRequest(endpoint.Endpoint):
 	@typing.override
 	def run(self, data: database.RequestData) -> endpoint.Result:
 		if data.user is None:
-			return endpoint.error("invalid token")
+			return endpoint.error("invalid token", http.HTTPStatus.UNAUTHORIZED)
 
 		try:
 			recipient = int(data.get("recipient"))
@@ -52,7 +52,7 @@ class DeclineRequest(endpoint.Endpoint):
 	@typing.override
 	def run(self, data: database.RequestData) -> endpoint.Result:
 		if data.user is None:
-			return endpoint.error("invalid token")
+			return endpoint.error("invalid token", http.HTTPStatus.UNAUTHORIZED)
 
 		try:
 			sender = int(data.get("sender"))

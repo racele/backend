@@ -59,7 +59,7 @@ class RenameUser(endpoint.Endpoint):
 	@typing.override
 	def run(self, data: database.RequestData) -> endpoint.Result:
 		if data.user is None:
-			return endpoint.error("invalid token")
+			return endpoint.error("invalid token", http.HTTPStatus.UNAUTHORIZED)
 
 		username = data.get("username")
 

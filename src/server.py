@@ -38,7 +38,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
 		query = self.rfile.read(length).decode()
 		parsed = dict(urllib.parse.parse_qsl(query))
-		data = database.RequestData(parsed, self.server.database)
+		data = database.RequestData(self.headers["Authorization"], parsed, self.server.database)
 
 		url = urllib.parse.urlparse(self.path)
 		path = url.path.strip("/")
