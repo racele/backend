@@ -4,7 +4,7 @@ import urllib.parse
 
 import database
 import endpoint
-import endpoints.all
+import endpoints.endpoints
 
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
@@ -49,4 +49,4 @@ class Server(http.server.HTTPServer):
 		super().__init__(("0.0.0.0", port), RequestHandler)
 
 		self.database = database.Database()
-		self.endpoints = [cls(self.database) for cls in endpoints.all.all]
+		self.endpoints = endpoints.endpoints.collect(self.database)
