@@ -8,18 +8,31 @@ import endpoints.endpoints
 
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
+	protocol_version = "HTTP/1.1"
+
 	def do_PATCH(self) -> None:
-		self.run(http.HTTPMethod.PATCH)
+		self.respond(http.HTTPMethod.PATCH)
 
 	def do_POST(self) -> None:
-		self.run(http.HTTPMethod.POST)
+		self.respond(http.HTTPMethod.POST)
 
-	def run(self, method: http.HTTPMethod) -> None:
+	def respond(self, method: http.HTTPMethod) -> None:
+		result = self.run(method)
+		response = json.dumps(result.response).encode()
+
+		self.send_response(result.code)
+		self.send_header("Content-Type", "application/json")
+		self.send_header("Content-Length", str(len(response)))
+		self.end_headers()
+
+		self.wfile.write(response)
+
+	def run(self, method: http.HTTPMethod) -> endpoint.Result:
 		if not isinstance(self.server, Server):
-			return
+			return endpoint.error("invalid server", http.HTTPStatus.INTERNAL_SERVER_ERROR)
 
 		try:
-			length = int(self.headers["content-length"])
+			length = int(self.headers["Content-Length"])
 		except Exception:
 			length = 0
 
@@ -32,16 +45,9 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
 		for handler in self.server.endpoints:
 			if handler.method == method and handler.path == path:
-				result = handler.run(data)
-				break
+				return handler.run(data)
 		else:
-			result = endpoint.error("invalid endpoint", http.HTTPStatus.NOT_FOUND)
-
-		self.send_response(result.code)
-		self.send_header("content-type", "application/json")
-		self.end_headers()
-
-		self.wfile.write(json.dumps(result.response).encode())
+			return endpoint.error("invalid endpoint", http.HTTPStatus.NOT_FOUND)
 
 
 class Server(http.server.HTTPServer):
