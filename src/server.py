@@ -9,12 +9,12 @@ import endpoints.endpoints
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
 	def do_PATCH(self) -> None:
-		self.run(endpoint.Method.Patch)
+		self.run(http.HTTPMethod.PATCH)
 
 	def do_POST(self) -> None:
-		self.run(endpoint.Method.Post)
+		self.run(http.HTTPMethod.POST)
 
-	def run(self, method: endpoint.Method) -> None:
+	def run(self, method: http.HTTPMethod) -> None:
 		if not isinstance(self.server, Server):
 			return
 
@@ -35,7 +35,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 				result = handler.run(data)
 				break
 		else:
-			result = endpoint.error(404, "invalid endpoint")
+			result = endpoint.error("invalid endpoint", http.HTTPStatus.NOT_FOUND)
 
 		self.send_response(result.code)
 		self.send_header("content-type", "application/json")

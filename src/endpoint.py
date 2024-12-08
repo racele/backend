@@ -1,27 +1,26 @@
 import abc
 import dataclasses
-import enum
+import http
 
 import database
 
 
-class Method(enum.Enum):
-	Patch = 0
-	Post = 1
-
-
 @dataclasses.dataclass
 class Result:
-	code: int
+	code: http.HTTPStatus
 	response: dict[str, object]
 
 
-def error(code: int, message: str) -> Result:
+def error(message: str, code: http.HTTPStatus = http.HTTPStatus.BAD_REQUEST) -> Result:
 	return Result(code, {"code": code, "message": message})
 
 
+def success(data: dict[str, object], code: http.HTTPStatus = http.HTTPStatus.OK) -> Result:
+	return Result(code, {"code": code, "data": data})
+
+
 class Endpoint(abc.ABC):
-	method: Method
+	method: http.HTTPMethod
 	path: str
 
 	def __init__(self, database: database.Database) -> None:
