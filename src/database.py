@@ -1,7 +1,9 @@
 import sqlite3
+
 import tables.request
 import tables.token
 import tables.user
+
 
 class Database:
 	def __init__(self) -> None:
@@ -15,6 +17,7 @@ class Database:
 			script = file.read()
 
 		connection.executescript(script)
+
 
 class RequestData:
 	data: dict[str, str]

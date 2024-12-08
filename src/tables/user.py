@@ -1,6 +1,8 @@
 import dataclasses
 import hashlib
+
 import table
+
 
 @dataclasses.dataclass
 class User:
@@ -13,6 +15,7 @@ class User:
 		hash = hashlib.sha1((password + self.salt).encode()).hexdigest()
 		return hash == self.password
 
+
 class UserTable(table.Table):
 	name = "user"
 
@@ -22,7 +25,7 @@ class UserTable(table.Table):
 
 		try:
 			cursor = self.execute("create", hash, salt, username)
-		except:
+		except Exception:
 			return None
 		else:
 			return cursor.lastrowid
@@ -39,7 +42,7 @@ class UserTable(table.Table):
 	def rename(self, user: int, username: str) -> bool:
 		try:
 			self.execute("rename", username, user)
-		except:
+		except Exception:
 			return False
 		else:
 			return True

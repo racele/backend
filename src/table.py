@@ -3,6 +3,7 @@ import random
 import sqlite3
 import string
 
+
 @functools.cache
 def queries(table: str) -> dict[str, str]:
 	with open(f"sql/{table}.sql") as file:
@@ -16,8 +17,10 @@ def queries(table: str) -> dict[str, str]:
 
 	return queries
 
+
 def randstr(count: int) -> str:
 	return "".join(random.sample(string.ascii_letters, count))
+
 
 class Table:
 	name: str

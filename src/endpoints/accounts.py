@@ -1,6 +1,8 @@
+import typing
+
 import database
 import endpoint
-import typing
+
 
 class Login(endpoint.Endpoint):
 	method = endpoint.Method.Post
@@ -22,6 +24,7 @@ class Login(endpoint.Endpoint):
 		token = self.database.tokens.create(user.id)
 
 		return endpoint.Result(200, {"token": token})
+
 
 class Register(endpoint.Endpoint):
 	method = endpoint.Method.Post
@@ -46,6 +49,7 @@ class Register(endpoint.Endpoint):
 		token = self.database.tokens.create(user)
 
 		return endpoint.Result(200, {"token": token})
+
 
 class RenameUser(endpoint.Endpoint):
 	method = endpoint.Method.Patch

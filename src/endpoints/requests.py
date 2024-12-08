@@ -1,6 +1,8 @@
+import typing
+
 import database
 import endpoint
-import typing
+
 
 class AcceptRequest(endpoint.Endpoint):
 	method = endpoint.Method.Post
@@ -13,13 +15,14 @@ class AcceptRequest(endpoint.Endpoint):
 
 		try:
 			sender = int(data.get("sender"))
-		except:
+		except Exception:
 			return endpoint.error(400, "invalid sender")
 
 		if not self.database.requests.accept(data.user, sender):
 			return endpoint.error(400, "accepting the request failed")
 
 		return endpoint.Result(200, {})
+
 
 class CreateRequest(endpoint.Endpoint):
 	method = endpoint.Method.Post
@@ -32,13 +35,14 @@ class CreateRequest(endpoint.Endpoint):
 
 		try:
 			recipient = int(data.get("recipient"))
-		except:
+		except Exception:
 			return endpoint.error(400, "invalid recipient")
 
 		if not self.database.requests.create(recipient, data.user):
 			return endpoint.error(400, "creating the request failed")
 
 		return endpoint.Result(200, {})
+
 
 class DeclineRequest(endpoint.Endpoint):
 	method = endpoint.Method.Post
@@ -51,7 +55,7 @@ class DeclineRequest(endpoint.Endpoint):
 
 		try:
 			sender = int(data.get("sender"))
-		except:
+		except Exception:
 			return endpoint.error(400, "invalid sender")
 
 		if not self.database.requests.decline(data.user, sender):

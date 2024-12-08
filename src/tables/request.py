@@ -1,5 +1,6 @@
 import table
 
+
 class RequestTable(table.Table):
 	name = "request"
 
@@ -13,7 +14,7 @@ class RequestTable(table.Table):
 
 		try:
 			self.execute("create", recipient, sender)
-		except:
+		except Exception:
 			return False
 		else:
 			return True

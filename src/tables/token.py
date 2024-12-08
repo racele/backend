@@ -1,5 +1,6 @@
 import table
 
+
 class TokenTable(table.Table):
 	name = "token"
 
@@ -9,7 +10,7 @@ class TokenTable(table.Table):
 
 			try:
 				self.execute("create", token, user)
-			except:
+			except Exception:
 				continue
 			else:
 				return token

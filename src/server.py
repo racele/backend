@@ -1,9 +1,11 @@
-import database
-import endpoint
-import endpoints.all
 import http.server
 import json
 import urllib.parse
+
+import database
+import endpoint
+import endpoints.all
+
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
 	def do_PATCH(self) -> None:
@@ -18,7 +20,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
 		try:
 			length = int(self.headers["content-length"])
-		except:
+		except Exception:
 			length = 0
 
 		query = self.rfile.read(length).decode()
@@ -40,6 +42,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 		self.end_headers()
 
 		self.wfile.write(json.dumps(result.response).encode())
+
 
 class Server(http.server.HTTPServer):
 	def __init__(self, port: int) -> None:
