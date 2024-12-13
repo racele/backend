@@ -1,48 +1,94 @@
 import dataclasses
-import hashlib
+import sqlite3
 
 import table
 
 
 @dataclasses.dataclass
-class User:
+class Auth:
 	id: int
 	password: str
 	salt: str
-	username: str
 
-	def verify_password(self, password: str) -> bool:
-		hash = hashlib.sha1((password + self.salt).encode()).hexdigest()
+	def verify(self, password: str) -> bool:
+		hash = table.Table.hash(password, self.salt)
 		return hash == self.password
 
 
-class UserTable(table.Table):
-	name = "user"
+@dataclasses.dataclass
+class User:
+	created_at: int
+	id: int
+	username: str
 
-	def create(self, username: str, password: str) -> int | None:
-		salt = table.randstr(10)
-		hash = hashlib.sha1((password + salt).encode()).hexdigest()
+
+class UserTable(table.Table):
+	table = "user"
+
+	def auth(self, username: str) -> Auth | None:
+		cursor = self.execute("auth", username)
+		data: table.FetchOne = cursor.fetchone()
+
+		if data is None:
+			return None
+
+		return Auth(*data)
+
+	def create(self, username: str, password: str) -> User | None:
+		salt = self.random(10)
+		hash = self.hash(password, salt)
 
 		try:
 			cursor = self.execute("create", hash, salt, username)
-		except Exception:
+		except sqlite3.IntegrityError:
 			return None
-		else:
-			return cursor.lastrowid
 
-	def get(self, username: str) -> User | None:
-		cursor = self.execute("get", username)
-		data = cursor.fetchone()
+		data: table.FetchOne = cursor.fetchone()
 
 		if data is None:
 			return None
 
 		return User(*data)
 
-	def rename(self, user: int, username: str) -> bool:
-		try:
-			self.execute("rename", username, user)
-		except Exception:
-			return False
+	def get(self, user_id: int) -> User | None:
+		cursor = self.execute("get", user_id)
+		data: table.FetchOne = cursor.fetchone()
+
+		if data is None:
+			return None
+
+		return User(*data)
+
+	def search(self, query: str) -> list[User]:
+		cursor = self.execute("search", query)
+		data: table.FetchAll = cursor.fetchall()
+
+		return [User(*row) for row in data]
+
+	def update(self, user_id: int, username: str | None, password: str | None) -> User | None:
+		if password is None:
+			salt = None
+			hash = None
 		else:
-			return True
+			salt = self.random(10)
+			hash = self.hash(password, salt)
+
+		try:
+			cursor = self.execute("update", hash, salt, username, user_id)
+		except sqlite3.IntegrityError:
+			return None
+
+		data: table.FetchOne = cursor.fetchone()
+
+		if data is None:
+			return None
+
+		return User(*data)
+
+	@staticmethod
+	def verify_password(password: str) -> bool:
+		return len(password) >= 8 and password.isascii() and password.isalnum()
+
+	@staticmethod
+	def verify_username(username: str) -> bool:
+		return len(username) >= 3 and username.isascii() and username.isalpha()

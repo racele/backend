@@ -6,10 +6,16 @@ import server
 def main() -> None:
 	try:
 		port = int(sys.argv[1])
-	except Exception:
+	except IndexError:
 		port = 3000
+	except ValueError:
+		sys.exit("port is not an integer")
 
-	app = server.Server(port)
+	try:
+		app = server.Server(port)
+	except OverflowError:
+		sys.exit("port is out of range")
+
 	app.serve_forever()
 
 

@@ -1,0 +1,27 @@
+@root = http://localhost:3000
+
+### Accept Request
+PUT {{root}}/users/@me/requests/1/accept
+Authorization: Bearer ???
+
+### Create Request
+POST {{root}}/users/@me/requests
+Authorization: Bearer ???
+
+recipient_id=2
+
+### Delete Request
+DELETE {{root}}/users/@me/requests/1
+Authorization: Bearer ???
+
+### Get Accepted
+GET {{root}}/users/@me/requests/accepted
+Authorization: Bearer ???
+
+### Get Received
+GET {{root}}/users/@me/requests/received
+Authorization: Bearer ???
+
+### Get Sent
+GET {{root}}/users/@me/requests/sent
+Authorization: Bearer ???

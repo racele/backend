@@ -1,0 +1,27 @@
+@root = http://localhost:3000
+
+### Authorize User
+POST {{root}}/users/authorize
+
+username=jan&password=12345678
+
+### Create User
+POST {{root}}/users
+
+username=jan&password=12345678
+
+### Get Self
+GET {{root}}/users/@me
+Authorization: Bearer ???
+
+### Get User
+GET {{root}}/users/1
+
+### Search Users
+GET {{root}}/users?query=j
+
+### Update Self
+PATCH {{root}}/users/@me
+Authorization: Bearer ???
+
+username=updated&password=testtest

@@ -1,7 +1,7 @@
 import sqlite3
 
 import tables.request
-import tables.token
+import tables.session
 import tables.user
 
 
@@ -10,7 +10,7 @@ class Database:
 		connection = sqlite3.connect(":memory:")
 
 		self.requests = tables.request.RequestTable(connection)
-		self.tokens = tables.token.TokenTable(connection)
+		self.sessions = tables.session.SessionTable(connection)
 		self.users = tables.user.UserTable(connection)
 
 		with open("sql/init.sql") as file:
@@ -19,16 +19,26 @@ class Database:
 		connection.executescript(script)
 
 
-class RequestData:
-	def __init__(self, auth: str | None, data: dict[str, str], database: Database) -> None:
+class Context:
+	def __init__(self, data: dict[str, str], database: Database) -> None:
 		self.data = data
-		self.user = None
+		self.database = database
 
-		if auth is not None:
-			parts = auth.split()
+		self.token = None
+		self.user_id = None
 
-			if len(parts) == 2 and parts[0].lower() == "bearer":
-				self.user = database.tokens.resolve(parts[1])
+	def get_token(self) -> str:
+		if self.token is None:
+			raise ValueError("missing token")
 
-	def get(self, parameter: str) -> str:
-		return self.data.get(parameter, "").strip()
+		return self.token
+
+	def get_user_id(self) -> int:
+		if self.user_id is None:
+			raise ValueError("missing user_id")
+
+		return self.user_id
+
+	def set_token(self, token: str) -> None:
+		self.token = token
+		self.user_id = self.database.sessions.resolve(token)
