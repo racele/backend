@@ -9,6 +9,7 @@ import response
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
 	protocol_version = "HTTP/1.1"
+	timeout = 3.0
 
 	def do_DELETE(self) -> None:
 		self.respond(http.HTTPMethod.DELETE)
@@ -29,10 +30,15 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 		self.respond(http.HTTPMethod.PUT)
 
 	def respond(self, method: http.HTTPMethod) -> None:
-		response = self.run(method)
-		body = json.dumps(response.body).encode()
+		try:
+			result = self.run(method)
+		except TimeoutError:
+			self.close_connection = True
+			result = response.error("request timed out", http.HTTPStatus.REQUEST_TIMEOUT)
 
-		self.send_response(response.code)
+		body = json.dumps(result.body).encode()
+
+		self.send_response(result.code)
 		self.send_header("Content-Type", "application/json")
 		self.send_header("Content-Length", str(len(body)))
 		self.end_headers()

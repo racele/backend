@@ -6,7 +6,7 @@ import string
 import typing
 
 type FetchAll = list[tuple[typing.Any, ...]]
-type FetchOne = None | tuple[typing.Any, ...]
+type FetchOne = tuple[typing.Any, ...] | None
 
 
 @functools.cache
