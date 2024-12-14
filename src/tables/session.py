@@ -1,6 +1,15 @@
+import dataclasses
 import sqlite3
 
 import table
+
+
+@dataclasses.dataclass
+class Session:
+	created_at: int
+	id: int
+	last_used_at: int | None
+	user_id: int
 
 
 class SessionTable(table.Table):
@@ -19,6 +28,16 @@ class SessionTable(table.Table):
 				continue
 
 			return token
+
+	def delete(self, session_id: int, user_id: int) -> bool:
+		cursor = self.execute("delete", session_id, user_id)
+		return cursor.rowcount == 1
+
+	def list(self, user_id: int) -> list[Session]:
+		cursor = self.execute("list", user_id)
+		data: table.FetchAll = cursor.fetchall()
+
+		return [Session(*row) for row in data]
 
 	def resolve(self, token: str) -> int | None:
 		cursor = self.execute("resolve", token)

@@ -14,14 +14,14 @@ recipient_id=2
 DELETE {{root}}/users/@me/requests/1
 Authorization: Bearer ???
 
-### Get Accepted
+### List Accepted
 GET {{root}}/users/@me/requests/accepted
 Authorization: Bearer ???
 
-### Get Received
+### List Received
 GET {{root}}/users/@me/requests/received
 Authorization: Bearer ???
 
-### Get Sent
+### List Sent
 GET {{root}}/users/@me/requests/sent
 Authorization: Bearer ???

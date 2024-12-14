@@ -12,6 +12,7 @@ create table request (
 -- session
 create table session (
 	created_at integer not null default (unixepoch()),
+	id integer primary key,
 	last_used_at integer,
 	token text not null unique,
 	user_id integer not null references user

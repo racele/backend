@@ -1,0 +1,9 @@
+@root = http://localhost:3000
+
+### Delete Session
+DELETE {{root}}/users/@me/sessions/1
+Authorization: Bearer ???
+
+### List Sessions
+GET {{root}}/users/@me/sessions
+Authorization: Bearer ???

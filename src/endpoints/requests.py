@@ -76,7 +76,7 @@ class DeleteRequest(endpoint.Endpoint):
 		return response.success({"deleted": deleted})
 
 
-class GetAccepted(endpoint.Endpoint):
+class ListAccepted(endpoint.Endpoint):
 	auth = True
 	method = http.HTTPMethod.GET
 	path = "/users/@me/requests/accepted"
@@ -93,7 +93,7 @@ class GetAccepted(endpoint.Endpoint):
 		return response.success(dicts)
 
 
-class GetReceived(endpoint.Endpoint):
+class ListReceived(endpoint.Endpoint):
 	auth = True
 	method = http.HTTPMethod.GET
 	path = "/users/@me/requests/received"
@@ -110,7 +110,7 @@ class GetReceived(endpoint.Endpoint):
 		return response.success(dicts)
 
 
-class GetSent(endpoint.Endpoint):
+class ListSent(endpoint.Endpoint):
 	auth = True
 	method = http.HTTPMethod.GET
 	path = "/users/@me/requests/sent"
