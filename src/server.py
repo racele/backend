@@ -20,6 +20,13 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 	def do_HEAD(self) -> None:
 		self.respond(http.HTTPMethod.HEAD)
 
+	def do_OPTIONS(self) -> None:
+		self.send_response(http.HTTPStatus.NO_CONTENT)
+		self.send_header("Access-Control-Allow-Headers", "*")
+		self.send_header("Access-Control-Allow-Methods", "*")
+		self.send_header("Access-Control-Allow-Origin", "*")
+		self.end_headers()
+
 	def do_PATCH(self) -> None:
 		self.respond(http.HTTPMethod.PATCH)
 
@@ -39,8 +46,9 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 		body = json.dumps(result.body).encode()
 
 		self.send_response(result.code)
-		self.send_header("Content-Type", "application/json")
+		self.send_header("Access-Control-Allow-Origin", "*")
 		self.send_header("Content-Length", str(len(body)))
+		self.send_header("Content-Type", "application/json")
 		self.end_headers()
 
 		if method != http.HTTPMethod.HEAD:
