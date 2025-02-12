@@ -1,6 +1,12 @@
 -- pragmas
 pragma foreign_keys = on;
 
+-- daily
+create table daily (
+	created_at text not null unique default (date()),
+	solution text not null unique
+) strict;
+
 -- request
 create table request (
 	accepted_at integer,

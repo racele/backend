@@ -4,6 +4,7 @@ import urllib.parse
 
 import database
 import endpoint
+import gateway
 import response
 
 
@@ -86,7 +87,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 			if result is not None:
 				return result
 
-			context = database.Context(data, self.server.database)
+			context = database.Context(data, self.server.database, self.server.gateway)
 			result = handler.parse_auth(context, self.headers.get("Authorization"))
 
 			if result is not None:
@@ -103,3 +104,4 @@ class Server(http.server.HTTPServer):
 
 		self.database = database.Database()
 		self.endpoints = endpoint.collect()
+		self.gateway = gateway.Gateway()

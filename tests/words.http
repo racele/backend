@@ -1,0 +1,7 @@
+@root = http://localhost:3000
+
+### Get Daily
+GET {{root}}/words/daily
+
+### Get Words
+GET {{root}}/words

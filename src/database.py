@@ -1,5 +1,7 @@
 import sqlite3
 
+import gateway
+import tables.daily
 import tables.request
 import tables.session
 import tables.user
@@ -9,6 +11,7 @@ class Database:
 	def __init__(self) -> None:
 		connection = sqlite3.connect(":memory:")
 
+		self.dailies = tables.daily.DailyTable(connection)
 		self.requests = tables.request.RequestTable(connection)
 		self.sessions = tables.session.SessionTable(connection)
 		self.users = tables.user.UserTable(connection)
@@ -20,9 +23,10 @@ class Database:
 
 
 class Context:
-	def __init__(self, data: dict[str, str], database: Database) -> None:
+	def __init__(self, data: dict[str, str], database: Database, gateway: gateway.Gateway) -> None:
 		self.data = data
 		self.database = database
+		self.gateway = gateway
 
 		self.token = None
 		self.user_id = None
