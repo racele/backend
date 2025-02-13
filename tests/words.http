@@ -1,7 +1,13 @@
 @root = http://localhost:3000
 
-### Get Daily
-GET {{root}}/words/daily
+### Get Daily (de)
+GET {{root}}/words/daily?language=de
 
-### Get Words
-GET {{root}}/words
+### Get Daily (en)
+GET {{root}}/words/daily?language=en
+
+### Get Words (de)
+GET {{root}}/words?language=de
+
+### Get Words (en)
+GET {{root}}/words?language=en

@@ -3,7 +3,8 @@ pragma foreign_keys = on;
 
 -- daily
 create table daily (
-	created_at text not null unique default (date()),
+	created_at text not null default (date()),
+	language text not null,
 	solution text not null unique
 ) strict;
 

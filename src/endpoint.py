@@ -28,7 +28,7 @@ class Endpoint:
 
 		context.set_token(parts[1])
 
-		if not context.user_id:
+		if context.user_id is None:
 			return response.error("invalid token", http.HTTPStatus.UNAUTHORIZED)
 
 		return None

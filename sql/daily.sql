@@ -1,10 +1,11 @@
 -- get
 select *
 from daily
-where created_at = date();
+where created_at = date()
+and language = ?;
 
 -- set
 insert
-into daily (solution)
-values (?)
+into daily (language, solution)
+values (?, ?)
 returning *;

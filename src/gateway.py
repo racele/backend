@@ -1,6 +1,12 @@
 import dataclasses
-import urllib.error
+import http.client
+import json
+import typing
 import urllib.request
+
+
+class JsonResponse(typing.TypedDict):
+	data: list[str]
 
 
 @dataclasses.dataclass
@@ -11,35 +17,51 @@ class Words:
 
 class Gateway:
 	def __init__(self) -> None:
-		self.cache: dict[str, str] = {}
+		self.cache: dict[str, Words] = {}
 
-	def get(self, url: str) -> str | None:
-		if url not in self.cache:
-			try:
-				with urllib.request.urlopen(url) as response:
-					content: bytes = response.read()
+	def get(self, url: str) -> str:
+		response: http.client.HTTPResponse
 
-				self.cache[url] = content.decode()
-			except urllib.error.URLError:
+		with urllib.request.urlopen(url) as response:
+			content = response.read()
+
+		return content.decode()
+
+	def load(self, language: str) -> Words | None:
+		match language:
+			case "de":
+				url = "https://raw.githubusercontent.com/caco3/wordle-de/main/other-words.json"
+				response: JsonResponse = json.loads(self.get(url))
+				guessable = [word for word in response["data"] if word.isascii()]
+
+				url = "https://raw.githubusercontent.com/caco3/wordle-de/main/target-words.json"
+				response: JsonResponse = json.loads(self.get(url))
+				solutions = [word for word in response["data"] if word.isascii()]
+
+				return Words(guessable, solutions)
+
+			case "en":
+				url = "https://gist.githubusercontent.com/scholtes/94f3c0303ba6a7768b47583aff36654d/raw/wordle-Ta.txt"
+				guessable = self.get(url).splitlines()
+
+				url = "https://gist.githubusercontent.com/scholtes/94f3c0303ba6a7768b47583aff36654d/raw/wordle-La.txt"
+				solutions = self.get(url).splitlines()
+
+				return Words(guessable, solutions)
+
+			case _:
 				return None
 
-		return self.cache[url]
+	def words(self, language: str) -> Words | None:
+		if language not in self.cache:
+			try:
+				words = self.load(language)
 
-	def words(self) -> Words | None:
-		url = "https://gist.githubusercontent.com/scholtes/94f3c0303ba6a7768b47583aff36654d/raw/wordle-Ta.txt"
-		response = self.get(url)
+				if words is None:
+					return None
 
-		if response is None:
-			return None
-		else:
-			guessable = response.splitlines()
+				self.cache[language] = words
+			except Exception:
+				return None
 
-		url = "https://gist.githubusercontent.com/scholtes/94f3c0303ba6a7768b47583aff36654d/raw/wordle-La.txt"
-		response = self.get(url)
-
-		if response is None:
-			return None
-		else:
-			solutions = response.splitlines()
-
-		return Words(guessable, solutions)
+		return self.cache[language]
