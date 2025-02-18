@@ -7,7 +7,5 @@ The backend for Racele.
 Run the main file to start the server:
 
 ```
-python3 src/main.py [port]
+python3 src/main.py [-h] [--port PORT] [--proxy PROXY]
 ```
-
-The optional `port` argument defaults to `3000`.
