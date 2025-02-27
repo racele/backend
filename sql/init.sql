@@ -3,7 +3,7 @@ pragma foreign_keys = on;
 
 -- daily
 create table daily (
-	created_at text not null default (date()),
+	date text not null default (date()),
 	language text not null,
 	solution text not null unique
 ) strict;
@@ -14,6 +14,14 @@ create table request (
 	created_at integer not null default (unixepoch()),
 	recipient_id integer not null references user,
 	sender_id integer not null references user
+) strict;
+
+-- score
+create table score (
+	attempts integer not null,
+	date text unique,
+	time integer not null,
+	user_id integer not null references user
 ) strict;
 
 -- session

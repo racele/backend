@@ -1,0 +1,26 @@
+@host = {{$dotenv HOST}}
+@token = {{$dotenv TOKEN}}
+
+### Create Score (daily)
+POST /users/@me/scores
+Host: {{host}}
+Authorization: Bearer {{token}}
+
+attempts=3&date=2025-01-01&time=20000
+
+### Create Score (practice)
+POST /users/@me/scores
+Host: {{host}}
+Authorization: Bearer {{token}}
+
+attempts=3&time=20000
+
+### List Daily
+GET /users/@me/scores/daily
+Host: {{host}}
+Authorization: Bearer {{token}}
+
+### List Practice
+GET /users/@me/scores/practice
+Host: {{host}}
+Authorization: Bearer {{token}}

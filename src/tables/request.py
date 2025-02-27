@@ -20,18 +20,14 @@ class RequestTable(table.Table):
 		return cursor.rowcount == 1
 
 	def accepted(self, user_id: int) -> list[Request]:
-		cursor = self.execute("accepted", user_id)
-		data: table.FetchAll = cursor.fetchall()
-
+		data = self.fetchall("accepted", user_id)
 		return [Request(*row) for row in data]
 
 	def create(self, recipient_id: int, sender_id: int) -> Request | None:
 		try:
-			cursor = self.execute("create", recipient_id, sender_id)
+			data = self.fetchone("create", recipient_id, sender_id)
 		except sqlite3.IntegrityError:
 			return None
-
-		data: table.FetchOne = cursor.fetchone()
 
 		if data is None:
 			return None
@@ -43,8 +39,7 @@ class RequestTable(table.Table):
 		return cursor.rowcount == 1
 
 	def exists(self, recipient_id: int, sender_id: int) -> bool:
-		cursor = self.execute("exists", recipient_id, sender_id)
-		data: table.FetchOne = cursor.fetchone()
+		data = self.fetchone("exists", recipient_id, sender_id)
 
 		if data is None:
 			return False
@@ -52,13 +47,9 @@ class RequestTable(table.Table):
 		return data[0] == 1
 
 	def received(self, user_id: int) -> list[Request]:
-		cursor = self.execute("received", user_id)
-		data: table.FetchAll = cursor.fetchall()
-
+		data = self.fetchall("received", user_id)
 		return [Request(*row) for row in data]
 
 	def sent(self, user_id: int) -> list[Request]:
-		cursor = self.execute("sent", user_id)
-		data: table.FetchAll = cursor.fetchall()
-
+		data = self.fetchall("sent", user_id)
 		return [Request(*row) for row in data]

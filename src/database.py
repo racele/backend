@@ -3,6 +3,7 @@ import sqlite3
 import gateway
 import tables.daily
 import tables.request
+import tables.score
 import tables.session
 import tables.user
 
@@ -13,6 +14,7 @@ class Database:
 
 		self.dailies = tables.daily.DailyTable(connection)
 		self.requests = tables.request.RequestTable(connection)
+		self.scores = tables.score.ScoreTable(connection)
 		self.sessions = tables.session.SessionTable(connection)
 		self.users = tables.user.UserTable(connection)
 

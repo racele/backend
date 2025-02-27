@@ -26,8 +26,7 @@ class UserTable(table.Table):
 	table = "user"
 
 	def auth(self, username: str) -> Auth | None:
-		cursor = self.execute("auth", username)
-		data: table.FetchOne = cursor.fetchone()
+		data = self.fetchone("auth", username)
 
 		if data is None:
 			return None
@@ -39,11 +38,9 @@ class UserTable(table.Table):
 		hash = self.hash(password, salt)
 
 		try:
-			cursor = self.execute("create", hash, salt, username)
+			data = self.fetchone("create", hash, salt, username)
 		except sqlite3.IntegrityError:
 			return None
-
-		data: table.FetchOne = cursor.fetchone()
 
 		if data is None:
 			return None
@@ -51,8 +48,7 @@ class UserTable(table.Table):
 		return User(*data)
 
 	def get(self, user_id: int) -> User | None:
-		cursor = self.execute("get", user_id)
-		data: table.FetchOne = cursor.fetchone()
+		data = self.fetchone("get", user_id)
 
 		if data is None:
 			return None
@@ -60,9 +56,7 @@ class UserTable(table.Table):
 		return User(*data)
 
 	def search(self, query: str) -> list[User]:
-		cursor = self.execute("search", query)
-		data: table.FetchAll = cursor.fetchall()
-
+		data = self.fetchall("search", query)
 		return [User(*row) for row in data]
 
 	def update(self, user_id: int, username: str | None, password: str | None) -> User | None:
@@ -74,11 +68,9 @@ class UserTable(table.Table):
 			hash = self.hash(password, salt)
 
 		try:
-			cursor = self.execute("update", hash, salt, username, user_id)
+			data = self.fetchone("update", hash, salt, username, user_id)
 		except sqlite3.IntegrityError:
 			return None
-
-		data: table.FetchOne = cursor.fetchone()
 
 		if data is None:
 			return None

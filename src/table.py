@@ -5,9 +5,6 @@ import sqlite3
 import string
 import typing
 
-type FetchAll = list[tuple[typing.Any, ...]]
-type FetchOne = tuple[typing.Any, ...] | None
-
 
 @functools.cache
 def queries(table: str) -> dict[str, str]:
@@ -31,6 +28,12 @@ class Table:
 
 	def execute(self, method: str, *parameters: object) -> sqlite3.Cursor:
 		return self.connection.execute(queries(self.table)[method], parameters)
+
+	def fetchall(self, method: str, *parameters: object) -> list[tuple[typing.Any, ...]]:
+		return self.execute(method, *parameters).fetchall()
+
+	def fetchone(self, method: str, *parameters: object) -> tuple[typing.Any, ...] | None:
+		return self.execute(method, *parameters).fetchone()
 
 	@staticmethod
 	def hash(input: str, salt: str) -> str:

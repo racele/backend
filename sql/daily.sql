@@ -1,7 +1,7 @@
 -- get
 select *
 from daily
-where created_at = date()
+where date = date()
 and language = ?;
 
 -- set

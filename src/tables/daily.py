@@ -6,7 +6,7 @@ import table
 
 @dataclasses.dataclass
 class Daily:
-	created_at: str
+	date: str
 	language: str
 	solution: str
 
@@ -15,8 +15,7 @@ class DailyTable(table.Table):
 	table = "daily"
 
 	def get(self, language: str) -> Daily | None:
-		cursor = self.execute("get", language)
-		data: table.FetchOne = cursor.fetchone()
+		data = self.fetchone("get", language)
 
 		if data is None:
 			return None
@@ -25,11 +24,9 @@ class DailyTable(table.Table):
 
 	def set(self, language: str, solution: str) -> Daily | None:
 		try:
-			cursor = self.execute("set", language, solution)
+			data = self.fetchone("set", language, solution)
 		except sqlite3.IntegrityError:
 			return None
-
-		data: table.FetchOne = cursor.fetchone()
 
 		if data is None:
 			return None

@@ -34,14 +34,11 @@ class SessionTable(table.Table):
 		return cursor.rowcount == 1
 
 	def list(self, user_id: int) -> list[Session]:
-		cursor = self.execute("list", user_id)
-		data: table.FetchAll = cursor.fetchall()
-
+		data = self.fetchall("list", user_id)
 		return [Session(*row) for row in data]
 
 	def resolve(self, token: str) -> int | None:
-		cursor = self.execute("resolve", token)
-		data: table.FetchOne = cursor.fetchone()
+		data = self.fetchone("resolve", token)
 
 		if data is None:
 			return None
