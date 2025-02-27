@@ -36,8 +36,6 @@ class ListSessions(endpoint.Endpoint):
 	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
-
 		sessions = context.database.sessions.list(user_id)
-		dicts = [vars(session) for session in sessions]
 
-		return response.success(dicts)
+		return response.success(sessions)

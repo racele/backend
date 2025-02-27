@@ -44,7 +44,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 			self.close_connection = True
 			result = response.error("request timed out", http.HTTPStatus.REQUEST_TIMEOUT)
 
-		body = json.dumps(result.body).encode()
+		body = json.dumps(result.data, cls=response.Encoder).encode()
 
 		self.send_response(result.code)
 		self.send_header("Access-Control-Allow-Origin", "*")
@@ -99,8 +99,8 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
 
 class Server(http.server.HTTPServer):
-	def __init__(self, port: int) -> None:
-		super().__init__(("0.0.0.0", port), RequestHandler)
+	def __init__(self, host: str, port: int) -> None:
+		super().__init__((host, port), RequestHandler)
 
 		self.database = database.Database()
 		self.endpoints = endpoint.collect()

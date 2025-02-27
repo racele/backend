@@ -1,9 +1,12 @@
-@root = http://localhost:3000
+@host = {{$dotenv HOST}}
+@token = {{$dotenv TOKEN}}
 
 ### Delete Session
-DELETE {{root}}/users/@me/sessions/1
-Authorization: Bearer ???
+DELETE /users/@me/sessions/1
+Host: {{host}}
+Authorization: Bearer {{token}}
 
 ### List Sessions
-GET {{root}}/users/@me/sessions
-Authorization: Bearer ???
+GET /users/@me/sessions
+Host: {{host}}
+Authorization: Bearer {{token}}

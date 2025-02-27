@@ -29,7 +29,7 @@ class GetDaily(endpoint.Endpoint):
 				solution = random.choice(words.solutions)
 				daily = context.database.dailies.set(language, solution)
 
-		return response.success(vars(daily))
+		return response.success(daily)
 
 
 class GetWords(endpoint.Endpoint):
@@ -47,4 +47,4 @@ class GetWords(endpoint.Endpoint):
 		if words is None:
 			return response.error("could not load word list", http.HTTPStatus.BAD_GATEWAY)
 
-		return response.success(vars(words))
+		return response.success(words)

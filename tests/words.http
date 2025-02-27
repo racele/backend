@@ -1,13 +1,17 @@
-@root = http://localhost:3000
+@host = {{$dotenv HOST}}
 
 ### Get Daily (de)
-GET {{root}}/words/daily?language=de
+GET /words/daily?language=de
+Host: {{host}}
 
 ### Get Daily (en)
-GET {{root}}/words/daily?language=en
+GET /words/daily?language=en
+Host: {{host}}
 
 ### Get Words (de)
-GET {{root}}/words?language=de
+GET /words?language=de
+Host: {{host}}
 
 ### Get Words (en)
-GET {{root}}/words?language=en
+GET /words?language=en
+Host: {{host}}

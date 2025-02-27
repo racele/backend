@@ -1,27 +1,34 @@
-@root = http://localhost:3000
+@host = {{$dotenv HOST}}
+@token = {{$dotenv TOKEN}}
 
 ### Authorize User
-POST {{root}}/users/authorize
+POST /users/authorize
+Host: {{host}}
 
 username=jan&password=12345678
 
 ### Create User
-POST {{root}}/users
+POST /users
+Host: {{host}}
 
 username=jan&password=12345678
 
 ### Get Self
-GET {{root}}/users/@me
-Authorization: Bearer ???
+GET /users/@me
+Host: {{host}}
+Authorization: Bearer {{token}}
 
 ### Get User
-GET {{root}}/users/1
+GET /users/1
+Host: {{host}}
 
 ### Search Users
-GET {{root}}/users?query=j
+GET /users?query=j
+Host: {{host}}
 
 ### Update Self
-PATCH {{root}}/users/@me
-Authorization: Bearer ???
+PATCH /users/@me
+Host: {{host}}
+Authorization: Bearer {{token}}
 
 username=updated&password=testtest

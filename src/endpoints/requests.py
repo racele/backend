@@ -53,7 +53,7 @@ class CreateRequest(endpoint.Endpoint):
 		if request is None:
 			return response.error("invalid recipient")
 
-		return response.success(vars(request), http.HTTPStatus.CREATED)
+		return response.success(request, http.HTTPStatus.CREATED)
 
 
 class DeleteRequest(endpoint.Endpoint):
@@ -86,11 +86,9 @@ class ListAccepted(endpoint.Endpoint):
 	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
-
 		requests = context.database.requests.accepted(user_id)
-		dicts = [vars(request) for request in requests]
 
-		return response.success(dicts)
+		return response.success(requests)
 
 
 class ListReceived(endpoint.Endpoint):
@@ -103,11 +101,9 @@ class ListReceived(endpoint.Endpoint):
 	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
-
 		requests = context.database.requests.received(user_id)
-		dicts = [vars(request) for request in requests]
 
-		return response.success(dicts)
+		return response.success(requests)
 
 
 class ListSent(endpoint.Endpoint):
@@ -120,8 +116,6 @@ class ListSent(endpoint.Endpoint):
 	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
-
 		requests = context.database.requests.sent(user_id)
-		dicts = [vars(request) for request in requests]
 
-		return response.success(dicts)
+		return response.success(requests)

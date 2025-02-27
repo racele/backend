@@ -1,30 +1,27 @@
 import dataclasses
 import http
+import json
 import typing
 
-type ResponseBody = ErrorBody | SuccessBody
-type ResponseData = dict[str, object] | list[dict[str, object]]
 
+class Encoder(json.JSONEncoder):
+	@typing.override
+	def default(self, o: object) -> object:
+		if dataclasses.is_dataclass(o):
+			return vars(o)
 
-class ErrorBody(typing.TypedDict):
-	code: http.HTTPStatus
-	message: str
-
-
-class SuccessBody(typing.TypedDict):
-	code: http.HTTPStatus
-	data: ResponseData
+		return super().default(o)
 
 
 @dataclasses.dataclass
 class Response:
-	body: ResponseBody
 	code: http.HTTPStatus
+	data: object
 
 
 def error(message: str, code: http.HTTPStatus = http.HTTPStatus.BAD_REQUEST) -> Response:
-	return Response({"code": code, "message": message}, code)
+	return Response(code, {"code": code, "message": message})
 
 
-def success(data: ResponseData, code: http.HTTPStatus = http.HTTPStatus.OK) -> Response:
-	return Response({"code": code, "data": data}, code)
+def success(data: object, code: http.HTTPStatus = http.HTTPStatus.OK) -> Response:
+	return Response(code, data)

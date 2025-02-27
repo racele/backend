@@ -1,27 +1,34 @@
-@root = http://localhost:3000
+@host = {{$dotenv HOST}}
+@token = {{$dotenv TOKEN}}
 
 ### Accept Request
-PUT {{root}}/users/@me/requests/1/accept
-Authorization: Bearer ???
+PUT /users/@me/requests/1/accept
+Host: {{host}}
+Authorization: Bearer {{token}}
 
 ### Create Request
-POST {{root}}/users/@me/requests
-Authorization: Bearer ???
+POST /users/@me/requests
+Host: {{host}}
+Authorization: Bearer {{token}}
 
 recipient_id=2
 
 ### Delete Request
-DELETE {{root}}/users/@me/requests/1
-Authorization: Bearer ???
+DELETE /users/@me/requests/1
+Host: {{host}}
+Authorization: Bearer {{token}}
 
 ### List Accepted
-GET {{root}}/users/@me/requests/accepted
-Authorization: Bearer ???
+GET /users/@me/requests/accepted
+Host: {{host}}
+Authorization: Bearer {{token}}
 
 ### List Received
-GET {{root}}/users/@me/requests/received
-Authorization: Bearer ???
+GET /users/@me/requests/received
+Host: {{host}}
+Authorization: Bearer {{token}}
 
 ### List Sent
-GET {{root}}/users/@me/requests/sent
-Authorization: Bearer ???
+GET /users/@me/requests/sent
+Host: {{host}}
+Authorization: Bearer {{token}}

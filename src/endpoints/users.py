@@ -54,7 +54,7 @@ class CreateUser(endpoint.Endpoint):
 		if user is None:
 			return response.error("username is already taken")
 
-		return response.success(vars(user), http.HTTPStatus.CREATED)
+		return response.success(user, http.HTTPStatus.CREATED)
 
 
 class GetSelf(endpoint.Endpoint):
@@ -73,7 +73,7 @@ class GetSelf(endpoint.Endpoint):
 		if user is None:
 			return response.error("invalid user")
 
-		return response.success(vars(user))
+		return response.success(user)
 
 
 class GetUser(endpoint.Endpoint):
@@ -95,7 +95,7 @@ class GetUser(endpoint.Endpoint):
 		if user is None:
 			return response.error("invalid user")
 
-		return response.success(vars(user))
+		return response.success(user)
 
 
 class SearchUsers(endpoint.Endpoint):
@@ -108,11 +108,9 @@ class SearchUsers(endpoint.Endpoint):
 	@typing.override
 	def run(context: database.Context) -> response.Response:
 		query = context.data["query"]
-
 		users = context.database.users.search(query)
-		dicts = [vars(user) for user in users]
 
-		return response.success(dicts)
+		return response.success(users)
 
 
 class UpdateSelf(endpoint.Endpoint):
@@ -144,4 +142,4 @@ class UpdateSelf(endpoint.Endpoint):
 		if password is not None:
 			context.database.sessions.clear(user_id, token)
 
-		return response.success(vars(user))
+		return response.success(user)
