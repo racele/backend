@@ -1,5 +1,4 @@
 import http
-import typing
 
 import database
 import endpoint
@@ -13,7 +12,6 @@ class CreateScore(endpoint.Endpoint):
 	query = ["attempts", "date?", "time"]
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		date = context.data.get("date")
 		user_id = context.get_user_id()
@@ -43,7 +41,6 @@ class ListDaily(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
 		scores = context.database.scores.daily(user_id)
@@ -58,7 +55,6 @@ class ListPractice(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
 		scores = context.database.scores.practice(user_id)

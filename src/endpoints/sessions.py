@@ -1,5 +1,4 @@
 import http
-import typing
 
 import database
 import endpoint
@@ -13,7 +12,6 @@ class DeleteSession(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
 
@@ -33,7 +31,6 @@ class ListSessions(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
 		sessions = context.database.sessions.list(user_id)

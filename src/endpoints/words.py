@@ -1,6 +1,5 @@
 import http
 import random
-import typing
 
 import database
 import endpoint
@@ -14,7 +13,6 @@ class GetDaily(endpoint.Endpoint):
 	query = ["language"]
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		language = context.data["language"]
 		daily = context.database.dailies.get(language)
@@ -39,7 +37,6 @@ class GetWords(endpoint.Endpoint):
 	query = ["language"]
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		language = context.data["language"]
 		words = context.gateway.words(language)

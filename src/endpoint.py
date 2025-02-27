@@ -1,4 +1,3 @@
-import abc
 import http
 import importlib
 import os
@@ -72,9 +71,8 @@ class Endpoint:
 		return None
 
 	@staticmethod
-	@abc.abstractmethod
 	def run(context: database.Context) -> response.Response:
-		pass
+		return response.error("missing implementation", http.HTTPStatus.SERVICE_UNAVAILABLE)
 
 
 def collect() -> list[type[Endpoint]]:

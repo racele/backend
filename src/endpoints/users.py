@@ -1,5 +1,4 @@
 import http
-import typing
 
 import database
 import endpoint
@@ -13,7 +12,6 @@ class AuthorizeUser(endpoint.Endpoint):
 	query = ["password", "username"]
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		password = context.data["password"]
 		username = context.data["username"]
@@ -38,7 +36,6 @@ class CreateUser(endpoint.Endpoint):
 	query = ["password", "username"]
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		password = context.data["password"]
 		username = context.data["username"]
@@ -64,7 +61,6 @@ class GetSelf(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
 
@@ -83,7 +79,6 @@ class GetUser(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		try:
 			user_id = int(context.data["user_id"])
@@ -105,7 +100,6 @@ class SearchUsers(endpoint.Endpoint):
 	query = ["query"]
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		query = context.data["query"]
 		users = context.database.users.search(query)
@@ -120,7 +114,6 @@ class UpdateSelf(endpoint.Endpoint):
 	query = ["password?", "username?"]
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		token = context.get_token()
 		user_id = context.get_user_id()

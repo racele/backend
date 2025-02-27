@@ -1,5 +1,4 @@
 import http
-import typing
 
 import database
 import endpoint
@@ -13,7 +12,6 @@ class AcceptRequest(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		recipient_id = context.get_user_id()
 
@@ -33,7 +31,6 @@ class CreateRequest(endpoint.Endpoint):
 	query = ["recipient_id"]
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		sender_id = context.get_user_id()
 
@@ -63,7 +60,6 @@ class DeleteRequest(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		own_id = context.get_user_id()
 
@@ -83,7 +79,6 @@ class ListAccepted(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
 		requests = context.database.requests.accepted(user_id)
@@ -98,7 +93,6 @@ class ListReceived(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
 		requests = context.database.requests.received(user_id)
@@ -113,7 +107,6 @@ class ListSent(endpoint.Endpoint):
 	query = []
 
 	@staticmethod
-	@typing.override
 	def run(context: database.Context) -> response.Response:
 		user_id = context.get_user_id()
 		requests = context.database.requests.sent(user_id)

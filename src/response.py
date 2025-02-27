@@ -1,11 +1,9 @@
 import dataclasses
 import http
 import json
-import typing
 
 
 class Encoder(json.JSONEncoder):
-	@typing.override
 	def default(self, o: object) -> object:
 		if dataclasses.is_dataclass(o):
 			return vars(o)
