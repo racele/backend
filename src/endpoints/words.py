@@ -21,7 +21,7 @@ class GetDaily(endpoint.Endpoint):
 			words = context.gateway.words(language)
 
 			if words is None:
-				return response.error("could not load word list", http.HTTPStatus.BAD_GATEWAY)
+				return response.error("Could not load word list", http.HTTPStatus.BAD_GATEWAY)
 
 			while daily is None:
 				solution = random.choice(words.solutions)
@@ -42,6 +42,6 @@ class GetWords(endpoint.Endpoint):
 		words = context.gateway.words(language)
 
 		if words is None:
-			return response.error("could not load word list", http.HTTPStatus.BAD_GATEWAY)
+			return response.error("Could not load word list", http.HTTPStatus.BAD_GATEWAY)
 
 		return response.success(words)

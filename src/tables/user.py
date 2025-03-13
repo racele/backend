@@ -79,8 +79,8 @@ class UserTable(table.Table):
 
 	@staticmethod
 	def verify_password(password: str) -> bool:
-		return len(password) >= 8 and password.isascii() and password.isalnum()
+		return len(password) >= 8 and password.isascii()
 
 	@staticmethod
 	def verify_username(username: str) -> bool:
-		return len(username) >= 3 and username.isascii() and username.isalpha()
+		return len(username) >= 3 and username.isascii() and username.isalnum() and username[0].isalpha()

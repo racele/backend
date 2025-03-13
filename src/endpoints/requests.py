@@ -18,7 +18,7 @@ class AcceptRequest(endpoint.Endpoint):
 		try:
 			sender_id = int(context.data["sender_id"])
 		except ValueError:
-			return response.error("invalid sender")
+			return response.error("Invalid sender")
 
 		accepted = context.database.requests.accept(recipient_id, sender_id)
 		return response.success({"accepted": accepted})
@@ -37,18 +37,18 @@ class CreateRequest(endpoint.Endpoint):
 		try:
 			recipient_id = int(context.data["recipient_id"])
 		except ValueError:
-			return response.error("invalid recipient")
+			return response.error("Invalid recipient")
 
 		if recipient_id == sender_id:
-			return response.error("cannot send a request to yourself")
+			return response.error("Cannot send a request to yourself")
 
 		if context.database.requests.exists(recipient_id, sender_id):
-			return response.error("request already exists")
+			return response.error("Request already exists")
 
 		request = context.database.requests.create(recipient_id, sender_id)
 
 		if request is None:
-			return response.error("invalid recipient")
+			return response.error("Invalid recipient")
 
 		return response.success(request, http.HTTPStatus.CREATED)
 
@@ -66,7 +66,7 @@ class DeleteRequest(endpoint.Endpoint):
 		try:
 			user_id = int(context.data["user_id"])
 		except ValueError:
-			return response.error("invalid user")
+			return response.error("Invalid user")
 
 		deleted = context.database.requests.delete(own_id, user_id)
 		return response.success({"deleted": deleted})

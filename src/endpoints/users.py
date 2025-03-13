@@ -19,10 +19,10 @@ class AuthorizeUser(endpoint.Endpoint):
 		auth = context.database.users.auth(username)
 
 		if auth is None:
-			return response.error("invalid username")
+			return response.error("Invalid username")
 
 		if not auth.verify(password):
-			return response.error("invalid password")
+			return response.error("Invalid password")
 
 		token = context.database.sessions.create(auth.id)
 
@@ -41,15 +41,15 @@ class CreateUser(endpoint.Endpoint):
 		username = context.data["username"]
 
 		if not context.database.users.verify_username(username):
-			return response.error("invalid username")
+			return response.error("Invalid username")
 
 		if not context.database.users.verify_password(password):
-			return response.error("invalid password")
+			return response.error("Invalid password")
 
 		user = context.database.users.create(username, password)
 
 		if user is None:
-			return response.error("username is already taken")
+			return response.error("Username is already taken")
 
 		return response.success(user, http.HTTPStatus.CREATED)
 
@@ -67,7 +67,7 @@ class GetSelf(endpoint.Endpoint):
 		user = context.database.users.get(user_id)
 
 		if user is None:
-			return response.error("invalid user")
+			return response.error("Invalid user")
 
 		return response.success(user)
 
@@ -83,12 +83,12 @@ class GetUser(endpoint.Endpoint):
 		try:
 			user_id = int(context.data["user_id"])
 		except ValueError:
-			return response.error("invalid user")
+			return response.error("Invalid user")
 
 		user = context.database.users.get(user_id)
 
 		if user is None:
-			return response.error("invalid user")
+			return response.error("Invalid user")
 
 		return response.success(user)
 
@@ -122,15 +122,15 @@ class UpdateSelf(endpoint.Endpoint):
 		username = context.data.get("username")
 
 		if username is not None and not context.database.users.verify_username(username):
-			return response.error("invalid username")
+			return response.error("Invalid username")
 
 		if password is not None and not context.database.users.verify_password(password):
-			return response.error("invalid password")
+			return response.error("Invalid password")
 
 		user = context.database.users.update(user_id, username, password)
 
 		if user is None:
-			return response.error("username is already taken")
+			return response.error("Username is already taken")
 
 		if password is not None:
 			context.database.sessions.clear(user_id, token)

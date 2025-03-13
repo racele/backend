@@ -21,17 +21,17 @@ class CreateScore(endpoint.Endpoint):
 		try:
 			guesses = int(context.data["guesses"])
 		except ValueError:
-			return response.error("invalid guesses")
+			return response.error("Invalid guesses")
 
 		try:
 			time = int(context.data["time"])
 		except ValueError:
-			return response.error("invalid time")
+			return response.error("Invalid time")
 
 		score = context.database.scores.create(date, guesses, solution, time, user_id)
 
 		if score is None:
-			return response.error("score already exists for this date")
+			return response.error("Score already exists for this date")
 
 		return response.success(score, http.HTTPStatus.CREATED)
 

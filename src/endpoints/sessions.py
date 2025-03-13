@@ -18,7 +18,7 @@ class DeleteSession(endpoint.Endpoint):
 		try:
 			session_id = int(context.data["session_id"])
 		except ValueError:
-			return response.error("invalid session")
+			return response.error("Invalid session")
 
 		deleted = context.database.sessions.delete(session_id, user_id)
 		return response.success({"deleted": deleted})

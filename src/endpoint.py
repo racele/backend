@@ -18,17 +18,17 @@ class Endpoint:
 			return None
 
 		if auth is None:
-			return response.error("missing authorization", http.HTTPStatus.UNAUTHORIZED)
+			return response.error("Missing authorization", http.HTTPStatus.UNAUTHORIZED)
 
 		parts = auth.strip().split()
 
 		if len(parts) != 2 or parts[0].lower() != "bearer":
-			return response.error("invalid authorization format", http.HTTPStatus.UNAUTHORIZED)
+			return response.error("Invalid authorization format", http.HTTPStatus.UNAUTHORIZED)
 
 		context.set_token(parts[1])
 
 		if context.user_id is None:
-			return response.error("invalid token", http.HTTPStatus.UNAUTHORIZED)
+			return response.error("Invalid token", http.HTTPStatus.UNAUTHORIZED)
 
 		return None
 
@@ -59,20 +59,20 @@ class Endpoint:
 				data[name] = query[name].strip()
 				del query[name]
 			elif not optional:
-				return response.error(f"missing parameter '{name}'")
+				return response.error(f"Missing parameter {name}")
 
 		for name in data:
 			if not data[name]:
-				return response.error(f"empty parameter '{name}'")
+				return response.error(f"Empty parameter {name}")
 
 		for name in query:
-			return response.error(f"unknown parameter '{name}'")
+			return response.error(f"Unknown parameter {name}")
 
 		return None
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		return response.error("missing implementation", http.HTTPStatus.SERVICE_UNAVAILABLE)
+		return response.error("Missing implementation", http.HTTPStatus.SERVICE_UNAVAILABLE)
 
 
 def collect() -> list[type[Endpoint]]:

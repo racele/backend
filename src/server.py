@@ -42,7 +42,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 			result = self.run(method)
 		except TimeoutError:
 			self.close_connection = True
-			result = response.error("request timed out", http.HTTPStatus.REQUEST_TIMEOUT)
+			result = response.error("Request timed out", http.HTTPStatus.REQUEST_TIMEOUT)
 
 		body = json.dumps(result.data, cls=response.Encoder).encode()
 
@@ -57,7 +57,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
 	def run(self, method: http.HTTPMethod) -> response.Response:
 		if not isinstance(self.server, Server):
-			return response.error("invalid server", http.HTTPStatus.INTERNAL_SERVER_ERROR)
+			return response.error("Invalid server", http.HTTPStatus.INTERNAL_SERVER_ERROR)
 
 		if method == http.HTTPMethod.HEAD:
 			method = http.HTTPMethod.GET
@@ -81,7 +81,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
 				query = self.rfile.read(length).decode()
 
-			parsed = dict(urllib.parse.parse_qsl(query))
+			parsed = dict(urllib.parse.parse_qsl(query, True))
 			result = handler.parse_query(data, parsed)
 
 			if result is not None:
@@ -95,7 +95,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
 			return handler.run(context)
 
-		return response.error("invalid endpoint", http.HTTPStatus.NOT_FOUND)
+		return response.error("Invalid endpoint", http.HTTPStatus.NOT_FOUND)
 
 
 class Server(http.server.HTTPServer):

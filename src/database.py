@@ -36,13 +36,13 @@ class Context:
 
 	def get_token(self) -> str:
 		if self.token is None:
-			raise ValueError("missing token")
+			raise ValueError
 
 		return self.token
 
 	def get_user_id(self) -> int:
 		if self.user_id is None:
-			raise ValueError("missing user_id")
+			raise ValueError
 
 		return self.user_id
 
