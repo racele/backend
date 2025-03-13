@@ -6,14 +6,14 @@ POST /users/@me/scores
 Host: {{host}}
 Authorization: Bearer {{token}}
 
-attempts=3&date=2025-01-01&time=20000
+date=2025-01-01&guesses=3&solution=crate&time=20000
 
 ### Create Score (practice)
 POST /users/@me/scores
 Host: {{host}}
 Authorization: Bearer {{token}}
 
-attempts=3&time=20000
+guesses=3&solution=crate&time=20000
 
 ### List Daily
 GET /users/@me/scores/daily

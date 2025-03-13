@@ -3,7 +3,6 @@ import hashlib
 import random
 import sqlite3
 import string
-import typing
 
 
 @functools.cache
@@ -29,10 +28,10 @@ class Table:
 	def execute(self, method: str, *parameters: object) -> sqlite3.Cursor:
 		return self.connection.execute(queries(self.table)[method], parameters)
 
-	def fetchall(self, method: str, *parameters: object) -> list[tuple[typing.Any, ...]]:
+	def fetchall(self, method: str, *parameters: object) -> list[sqlite3.Row]:
 		return self.execute(method, *parameters).fetchall()
 
-	def fetchone(self, method: str, *parameters: object) -> tuple[typing.Any, ...] | None:
+	def fetchone(self, method: str, *parameters: object) -> sqlite3.Row | None:
 		return self.execute(method, *parameters).fetchone()
 
 	@staticmethod

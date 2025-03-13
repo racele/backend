@@ -5,7 +5,10 @@ pragma foreign_keys = on;
 create table daily (
 	date text not null default (date()),
 	language text not null,
-	solution text not null unique
+	solution text not null,
+
+	unique (date, language),
+	unique (language, solution)
 ) strict;
 
 -- request
@@ -18,10 +21,13 @@ create table request (
 
 -- score
 create table score (
-	attempts integer not null,
-	date text unique,
+	date text,
+	guesses integer not null,
+	solution text not null,
 	time integer not null,
-	user_id integer not null references user
+	user_id integer not null references user,
+
+	unique (date, user_id)
 ) strict;
 
 -- session

@@ -1,7 +1,7 @@
 -- create
 insert
-into score (attempts, date, time, user_id)
-values (?, ?, ?, ?)
+into score (date, guesses, solution, time, user_id)
+values (?, ?, ?, ?, ?)
 returning *;
 
 -- daily

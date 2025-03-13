@@ -9,24 +9,26 @@ class CreateScore(endpoint.Endpoint):
 	auth = True
 	method = http.HTTPMethod.POST
 	path = "/users/@me/scores"
-	query = ["attempts", "date?", "time"]
+	query = ["date?", "guesses", "solution", "time"]
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		date = context.data.get("date")
 		user_id = context.get_user_id()
 
+		date = context.data.get("date")
+		solution = context.data["solution"]
+
 		try:
-			attempts = int(context.data["attempts"])
+			guesses = int(context.data["guesses"])
 		except ValueError:
-			return response.error("invalid attempts")
+			return response.error("invalid guesses")
 
 		try:
 			time = int(context.data["time"])
 		except ValueError:
 			return response.error("invalid time")
 
-		score = context.database.scores.create(attempts, date, time, user_id)
+		score = context.database.scores.create(date, guesses, solution, time, user_id)
 
 		if score is None:
 			return response.error("score already exists for this date")

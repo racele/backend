@@ -6,8 +6,9 @@ import table
 
 @dataclasses.dataclass
 class Score:
-	attempts: int
 	date: str | None
+	guesses: int
+	solution: str
 	time: int
 	user_id: int
 
@@ -15,9 +16,9 @@ class Score:
 class ScoreTable(table.Table):
 	table = "score"
 
-	def create(self, attempts: int, date: str | None, time: int, user_id: int) -> Score | None:
+	def create(self, date: str | None, guesses: int, solution: str, time: int, user_id: int) -> Score | None:
 		try:
-			data = self.fetchone("create", attempts, date, time, user_id)
+			data = self.fetchone("create", date, guesses, solution, time, user_id)
 		except sqlite3.IntegrityError:
 			return None
 
