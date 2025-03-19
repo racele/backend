@@ -21,6 +21,7 @@ create table request (
 
 -- score
 create table score (
+	created_at integer not null default (unixepoch()),
 	date text,
 	guesses integer not null,
 	solution text not null,
@@ -33,8 +34,8 @@ create table score (
 -- session
 create table session (
 	created_at integer not null default (unixepoch()),
-	id integer primary key,
-	last_used_at integer,
+	last_used_at integer not null default (unixepoch()),
+	session_id integer primary key,
 	token text not null unique,
 	user_id integer not null references user
 ) strict;
@@ -42,8 +43,8 @@ create table session (
 -- user
 create table user (
 	created_at integer not null default (unixepoch()),
-	id integer primary key,
 	password text not null,
 	salt text not null,
+	user_id integer primary key,
 	username text not null unique collate nocase
 ) strict;

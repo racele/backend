@@ -88,7 +88,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 				return result
 
 			context = database.Context(data, self.server.database, self.server.gateway)
-			result = handler.parse_auth(context, self.headers.get("Authorization"))
+			result = handler.parse_auth(context, self.headers)
 
 			if result is not None:
 				return result

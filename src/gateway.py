@@ -5,7 +5,7 @@ import typing
 import urllib.request
 
 
-class JsonResponse(typing.TypedDict):
+class Data(typing.TypedDict):
 	data: list[str]
 
 
@@ -31,12 +31,12 @@ class Gateway:
 		match language:
 			case "de":
 				url = "https://raw.githubusercontent.com/caco3/wordle-de/main/other-words.json"
-				response: JsonResponse = json.loads(self.get(url))
-				guessable = [word for word in response["data"] if word.isascii()]
+				data: Data = json.loads(self.get(url))
+				guessable = [word for word in data["data"] if word.isascii()]
 
 				url = "https://raw.githubusercontent.com/caco3/wordle-de/main/target-words.json"
-				response: JsonResponse = json.loads(self.get(url))
-				solutions = [word for word in response["data"] if word.isascii()]
+				data: Data = json.loads(self.get(url))
+				solutions = [word for word in data["data"] if word.isascii()]
 
 				return Words(guessable, solutions)
 

@@ -3,24 +3,24 @@
 
 ### Create Score (daily)
 POST /users/@me/scores
-Host: {{host}}
 Authorization: Bearer {{token}}
+Host: {{host}}
 
 date=2025-01-01&guesses=3&solution=crate&time=20000
 
 ### Create Score (practice)
 POST /users/@me/scores
-Host: {{host}}
 Authorization: Bearer {{token}}
+Host: {{host}}
 
 guesses=3&solution=crate&time=20000
 
-### List Daily
-GET /users/@me/scores/daily
-Host: {{host}}
+### List Scores (daily)
+GET /users/@me/scores?mode=daily
 Authorization: Bearer {{token}}
+Host: {{host}}
 
-### List Practice
-GET /users/@me/scores/practice
-Host: {{host}}
+### List Scores (practice)
+GET /users/@me/scores?mode=practice
 Authorization: Bearer {{token}}
+Host: {{host}}

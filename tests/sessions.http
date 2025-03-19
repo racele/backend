@@ -3,10 +3,10 @@
 
 ### Delete Session
 DELETE /users/@me/sessions/1
-Host: {{host}}
 Authorization: Bearer {{token}}
+Host: {{host}}
 
 ### List Sessions
 GET /users/@me/sessions
-Host: {{host}}
 Authorization: Bearer {{token}}
+Host: {{host}}

@@ -15,9 +15,13 @@ class Request:
 class RequestTable(table.Table):
 	table = "request"
 
-	def accept(self, recipient_id: int, sender_id: int) -> bool:
-		cursor = self.execute("accept", recipient_id, sender_id)
-		return cursor.rowcount == 1
+	def accept(self, recipient_id: int, sender_id: int) -> Request | None:
+		data = self.fetchone("accept", recipient_id, sender_id)
+
+		if data is None:
+			return None
+
+		return Request(*data)
 
 	def accepted(self, user_id: int) -> list[Request]:
 		data = self.fetchall("accepted", user_id)

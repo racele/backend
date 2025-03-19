@@ -5,18 +5,13 @@
 POST /users/authorize
 Host: {{host}}
 
-username=jan&password=12345678
+password=12345678&username=jan
 
 ### Create User
 POST /users
 Host: {{host}}
 
-username=jan&password=12345678
-
-### Get Self
-GET /users/@me
-Host: {{host}}
-Authorization: Bearer {{token}}
+password=12345678&username=jan
 
 ### Get User
 GET /users/1
@@ -26,9 +21,9 @@ Host: {{host}}
 GET /users?query=j
 Host: {{host}}
 
-### Update Self
+### Update User
 PATCH /users/@me
-Host: {{host}}
 Authorization: Bearer {{token}}
+Host: {{host}}
 
-username=updated&password=testtest
+password=testtest&username=updated

@@ -1,3 +1,4 @@
+import email.message
 import http
 import importlib
 import os
@@ -13,9 +14,11 @@ class Endpoint:
 	query: list[str]
 
 	@classmethod
-	def parse_auth(cls, context: database.Context, auth: str | None) -> response.Response | None:
+	def parse_auth(cls, context: database.Context, headers: email.message.Message) -> response.Response | None:
 		if not cls.auth:
 			return None
+
+		auth = headers.get("Authorization")
 
 		if auth is None:
 			return response.error("Missing authorization", http.HTTPStatus.UNAUTHORIZED)
@@ -25,9 +28,9 @@ class Endpoint:
 		if len(parts) != 2 or parts[0].lower() != "bearer":
 			return response.error("Invalid authorization format", http.HTTPStatus.UNAUTHORIZED)
 
-		context.set_token(parts[1])
+		context.set_auth(parts[1])
 
-		if context.user_id is None:
+		if context.auth is None:
 			return response.error("Invalid token", http.HTTPStatus.UNAUTHORIZED)
 
 		return None

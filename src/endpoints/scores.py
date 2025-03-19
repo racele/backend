@@ -13,7 +13,7 @@ class CreateScore(endpoint.Endpoint):
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		user_id = context.get_user_id()
+		auth = context.get_auth()
 
 		date = context.data.get("date")
 		solution = context.data["solution"]
@@ -28,7 +28,7 @@ class CreateScore(endpoint.Endpoint):
 		except ValueError:
 			return response.error("Invalid time")
 
-		score = context.database.scores.create(date, guesses, solution, time, user_id)
+		score = context.database.scores.create(date, guesses, solution, time, auth.user_id)
 
 		if score is None:
 			return response.error("Score already exists for this date")
@@ -36,29 +36,23 @@ class CreateScore(endpoint.Endpoint):
 		return response.success(score, http.HTTPStatus.CREATED)
 
 
-class ListDaily(endpoint.Endpoint):
+class ListScores(endpoint.Endpoint):
 	auth = True
 	method = http.HTTPMethod.GET
-	path = "/users/@me/scores/daily"
-	query = []
+	path = "/users/@me/scores"
+	query = ["mode"]
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		user_id = context.get_user_id()
-		scores = context.database.scores.daily(user_id)
+		auth = context.get_auth()
+		mode = context.data["mode"]
 
-		return response.success(scores)
-
-
-class ListPractice(endpoint.Endpoint):
-	auth = True
-	method = http.HTTPMethod.GET
-	path = "/users/@me/scores/practice"
-	query = []
-
-	@staticmethod
-	def run(context: database.Context) -> response.Response:
-		user_id = context.get_user_id()
-		scores = context.database.scores.practice(user_id)
+		match mode:
+			case "daily":
+				scores = context.database.scores.daily(auth.user_id)
+			case "practice":
+				scores = context.database.scores.practice(auth.user_id)
+			case _:
+				return response.error("Invalid mode")
 
 		return response.success(scores)

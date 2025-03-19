@@ -27,25 +27,16 @@ class Database:
 
 class Context:
 	def __init__(self, data: dict[str, str], database: Database, gateway: gateway.Gateway) -> None:
+		self.auth = None
 		self.data = data
 		self.database = database
 		self.gateway = gateway
 
-		self.token = None
-		self.user_id = None
-
-	def get_token(self) -> str:
-		if self.token is None:
+	def get_auth(self) -> tables.session.Auth:
+		if self.auth is None:
 			raise ValueError
 
-		return self.token
+		return self.auth
 
-	def get_user_id(self) -> int:
-		if self.user_id is None:
-			raise ValueError
-
-		return self.user_id
-
-	def set_token(self, token: str) -> None:
-		self.token = token
-		self.user_id = self.database.sessions.resolve(token)
+	def set_auth(self, token: str) -> None:
+		self.auth = self.database.sessions.resolve(token)

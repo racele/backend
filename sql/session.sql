@@ -12,11 +12,11 @@ values (?, ?);
 -- delete
 delete
 from session
-where id = ?
+where session_id = ?
 and user_id = ?;
 
 -- list
-select created_at, id, last_used_at, user_id
+select created_at, last_used_at, session_id, user_id
 from session
 where user_id = ?
 order by last_used_at desc;
@@ -25,4 +25,4 @@ order by last_used_at desc;
 update session
 set last_used_at = unixepoch()
 where token = ?
-returning user_id;
+returning token, user_id;

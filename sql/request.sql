@@ -1,9 +1,9 @@
 -- accept
 update request
-set accepted_at = unixepoch()
-where accepted_at is null
-and recipient_id = ?
-and sender_id = ?;
+set accepted_at = coalesce(accepted_at, unixepoch())
+where recipient_id = ?
+and sender_id = ?
+returning *;
 
 -- accepted
 select *
@@ -26,8 +26,7 @@ where (?, ?) in ((recipient_id, sender_id), (sender_id, recipient_id));
 -- exists
 select count(*)
 from request
-where (?, ?) in ((recipient_id, sender_id), (sender_id, recipient_id))
-limit 1;
+where (?, ?) in ((recipient_id, sender_id), (sender_id, recipient_id));
 
 -- received
 select *

@@ -5,10 +5,10 @@ import table
 
 
 @dataclasses.dataclass
-class Auth:
-	id: int
+class Access:
 	password: str
 	salt: str
+	user_id: int
 
 	def verify(self, password: str) -> bool:
 		hash = table.Table.hash(password, self.salt)
@@ -18,22 +18,22 @@ class Auth:
 @dataclasses.dataclass
 class User:
 	created_at: int
-	id: int
+	user_id: int
 	username: str
 
 
 class UserTable(table.Table):
 	table = "user"
 
-	def auth(self, username: str) -> Auth | None:
-		data = self.fetchone("auth", username)
+	def access(self, username: str) -> Access | None:
+		data = self.fetchone("access", username)
 
 		if data is None:
 			return None
 
-		return Auth(*data)
+		return Access(*data)
 
-	def create(self, username: str, password: str) -> User | None:
+	def create(self, password: str, username: str) -> User | None:
 		salt = self.random(10)
 		hash = self.hash(password, salt)
 
@@ -59,7 +59,7 @@ class UserTable(table.Table):
 		data = self.fetchall("search", query)
 		return [User(*row) for row in data]
 
-	def update(self, user_id: int, username: str | None, password: str | None) -> User | None:
+	def update(self, password: str | None, user_id: int, username: str | None) -> User | None:
 		if password is None:
 			salt = None
 			hash = None

@@ -6,6 +6,7 @@ import table
 
 @dataclasses.dataclass
 class Score:
+	created_at: int
 	date: str | None
 	guesses: int
 	solution: str

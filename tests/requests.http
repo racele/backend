@@ -3,32 +3,32 @@
 
 ### Accept Request
 PUT /users/@me/requests/1/accept
-Host: {{host}}
 Authorization: Bearer {{token}}
+Host: {{host}}
 
 ### Create Request
 POST /users/@me/requests
-Host: {{host}}
 Authorization: Bearer {{token}}
+Host: {{host}}
 
 recipient_id=2
 
 ### Delete Request
 DELETE /users/@me/requests/1
-Host: {{host}}
 Authorization: Bearer {{token}}
+Host: {{host}}
 
-### List Accepted
-GET /users/@me/requests/accepted
-Host: {{host}}
+### List Requests (accepted)
+GET /users/@me/requests?status=accepted
 Authorization: Bearer {{token}}
+Host: {{host}}
 
-### List Received
-GET /users/@me/requests/received
-Host: {{host}}
+### List Requests (received)
+GET /users/@me/requests?status=received
 Authorization: Bearer {{token}}
+Host: {{host}}
 
-### List Sent
-GET /users/@me/requests/sent
-Host: {{host}}
+### List Requests (sent)
+GET /users/@me/requests?status=sent
 Authorization: Bearer {{token}}
+Host: {{host}}

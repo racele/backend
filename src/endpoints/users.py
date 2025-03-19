@@ -16,17 +16,17 @@ class AuthorizeUser(endpoint.Endpoint):
 		password = context.data["password"]
 		username = context.data["username"]
 
-		auth = context.database.users.auth(username)
+		access = context.database.users.access(username)
 
-		if auth is None:
+		if access is None:
 			return response.error("Invalid username")
 
-		if not auth.verify(password):
+		if not access.verify(password):
 			return response.error("Invalid password")
 
-		token = context.database.sessions.create(auth.id)
+		auth = context.database.sessions.create(access.user_id)
 
-		return response.success({"token": token})
+		return response.success(auth)
 
 
 class CreateUser(endpoint.Endpoint):
@@ -46,30 +46,12 @@ class CreateUser(endpoint.Endpoint):
 		if not context.database.users.verify_password(password):
 			return response.error("Invalid password")
 
-		user = context.database.users.create(username, password)
+		user = context.database.users.create(password, username)
 
 		if user is None:
 			return response.error("Username is already taken")
 
 		return response.success(user, http.HTTPStatus.CREATED)
-
-
-class GetSelf(endpoint.Endpoint):
-	auth = True
-	method = http.HTTPMethod.GET
-	path = "/users/@me"
-	query = []
-
-	@staticmethod
-	def run(context: database.Context) -> response.Response:
-		user_id = context.get_user_id()
-
-		user = context.database.users.get(user_id)
-
-		if user is None:
-			return response.error("Invalid user")
-
-		return response.success(user)
 
 
 class GetUser(endpoint.Endpoint):
@@ -107,7 +89,7 @@ class SearchUsers(endpoint.Endpoint):
 		return response.success(users)
 
 
-class UpdateSelf(endpoint.Endpoint):
+class UpdateUser(endpoint.Endpoint):
 	auth = True
 	method = http.HTTPMethod.PATCH
 	path = "/users/@me"
@@ -115,8 +97,7 @@ class UpdateSelf(endpoint.Endpoint):
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		token = context.get_token()
-		user_id = context.get_user_id()
+		auth = context.get_auth()
 
 		password = context.data.get("password")
 		username = context.data.get("username")
@@ -127,12 +108,12 @@ class UpdateSelf(endpoint.Endpoint):
 		if password is not None and not context.database.users.verify_password(password):
 			return response.error("Invalid password")
 
-		user = context.database.users.update(user_id, username, password)
+		user = context.database.users.update(password, auth.user_id, username)
 
 		if user is None:
 			return response.error("Username is already taken")
 
 		if password is not None:
-			context.database.sessions.clear(user_id, token)
+			context.database.sessions.clear(auth.token, auth.user_id)
 
 		return response.success(user)

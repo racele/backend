@@ -17,8 +17,12 @@ class Response:
 	data: object
 
 
+def deleted(deleted: bool, code: http.HTTPStatus = http.HTTPStatus.BAD_REQUEST) -> Response:
+	return Response(code, {"deleted": deleted})
+
+
 def error(message: str, code: http.HTTPStatus = http.HTTPStatus.BAD_REQUEST) -> Response:
-	return Response(code, {"code": code, "message": message})
+	return Response(code, {"message": message})
 
 
 def success(data: object, code: http.HTTPStatus = http.HTTPStatus.OK) -> Response:

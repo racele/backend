@@ -13,15 +13,19 @@ class AcceptRequest(endpoint.Endpoint):
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		recipient_id = context.get_user_id()
+		auth = context.get_auth()
 
 		try:
 			sender_id = int(context.data["sender_id"])
 		except ValueError:
 			return response.error("Invalid sender")
 
-		accepted = context.database.requests.accept(recipient_id, sender_id)
-		return response.success({"accepted": accepted})
+		request = context.database.requests.accept(auth.user_id, sender_id)
+
+		if request is None:
+			return response.error("Invalid sender")
+
+		return response.success(request)
 
 
 class CreateRequest(endpoint.Endpoint):
@@ -32,20 +36,20 @@ class CreateRequest(endpoint.Endpoint):
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		sender_id = context.get_user_id()
+		auth = context.get_auth()
 
 		try:
 			recipient_id = int(context.data["recipient_id"])
 		except ValueError:
 			return response.error("Invalid recipient")
 
-		if recipient_id == sender_id:
+		if recipient_id == auth.user_id:
 			return response.error("Cannot send a request to yourself")
 
-		if context.database.requests.exists(recipient_id, sender_id):
+		if context.database.requests.exists(recipient_id, auth.user_id):
 			return response.error("Request already exists")
 
-		request = context.database.requests.create(recipient_id, sender_id)
+		request = context.database.requests.create(recipient_id, auth.user_id)
 
 		if request is None:
 			return response.error("Invalid recipient")
@@ -61,54 +65,36 @@ class DeleteRequest(endpoint.Endpoint):
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		own_id = context.get_user_id()
+		auth = context.get_auth()
 
 		try:
 			user_id = int(context.data["user_id"])
 		except ValueError:
 			return response.error("Invalid user")
 
-		deleted = context.database.requests.delete(own_id, user_id)
-		return response.success({"deleted": deleted})
+		deleted = context.database.requests.delete(auth.user_id, user_id)
+		return response.deleted(deleted)
 
 
-class ListAccepted(endpoint.Endpoint):
+class ListRequests(endpoint.Endpoint):
 	auth = True
 	method = http.HTTPMethod.GET
-	path = "/users/@me/requests/accepted"
-	query = []
+	path = "/users/@me/requests"
+	query = ["status"]
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		user_id = context.get_user_id()
-		requests = context.database.requests.accepted(user_id)
+		auth = context.get_auth()
+		status = context.data["status"]
 
-		return response.success(requests)
-
-
-class ListReceived(endpoint.Endpoint):
-	auth = True
-	method = http.HTTPMethod.GET
-	path = "/users/@me/requests/received"
-	query = []
-
-	@staticmethod
-	def run(context: database.Context) -> response.Response:
-		user_id = context.get_user_id()
-		requests = context.database.requests.received(user_id)
-
-		return response.success(requests)
-
-
-class ListSent(endpoint.Endpoint):
-	auth = True
-	method = http.HTTPMethod.GET
-	path = "/users/@me/requests/sent"
-	query = []
-
-	@staticmethod
-	def run(context: database.Context) -> response.Response:
-		user_id = context.get_user_id()
-		requests = context.database.requests.sent(user_id)
+		match status:
+			case "accepted":
+				requests = context.database.requests.accepted(auth.user_id)
+			case "received":
+				requests = context.database.requests.received(auth.user_id)
+			case "sent":
+				requests = context.database.requests.sent(auth.user_id)
+			case _:
+				return response.error("Invalid status")
 
 		return response.success(requests)

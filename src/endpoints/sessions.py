@@ -13,15 +13,15 @@ class DeleteSession(endpoint.Endpoint):
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		user_id = context.get_user_id()
+		auth = context.get_auth()
 
 		try:
 			session_id = int(context.data["session_id"])
 		except ValueError:
 			return response.error("Invalid session")
 
-		deleted = context.database.sessions.delete(session_id, user_id)
-		return response.success({"deleted": deleted})
+		deleted = context.database.sessions.delete(session_id, auth.user_id)
+		return response.deleted(deleted)
 
 
 class ListSessions(endpoint.Endpoint):
@@ -32,7 +32,7 @@ class ListSessions(endpoint.Endpoint):
 
 	@staticmethod
 	def run(context: database.Context) -> response.Response:
-		user_id = context.get_user_id()
-		sessions = context.database.sessions.list(user_id)
+		auth = context.get_auth()
+		sessions = context.database.sessions.list(auth.user_id)
 
 		return response.success(sessions)
