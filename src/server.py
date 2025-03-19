@@ -99,9 +99,9 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
 
 class Server(http.server.HTTPServer):
-	def __init__(self, host: str, port: int) -> None:
+	def __init__(self, data: str, host: str, port: int) -> None:
 		super().__init__((host, port), RequestHandler)
 
-		self.database = database.Database()
+		self.database = database.Database(data)
 		self.endpoints = endpoint.collect()
 		self.gateway = gateway.Gateway()

@@ -24,6 +24,20 @@ class DeleteSession(endpoint.Endpoint):
 		return response.deleted(deleted)
 
 
+class EndSession(endpoint.Endpoint):
+	auth = True
+	method = http.HTTPMethod.DELETE
+	path = "/users/@me/sessions/@me"
+	query = []
+
+	@staticmethod
+	def run(context: database.Context) -> response.Response:
+		auth = context.get_auth()
+		deleted = context.database.sessions.end(auth.token)
+
+		return response.deleted(deleted)
+
+
 class ListSessions(endpoint.Endpoint):
 	auth = True
 	method = http.HTTPMethod.GET

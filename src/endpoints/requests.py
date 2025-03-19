@@ -46,7 +46,9 @@ class CreateRequest(endpoint.Endpoint):
 		if recipient_id == auth.user_id:
 			return response.error("Cannot send a request to yourself")
 
-		if context.database.requests.exists(recipient_id, auth.user_id):
+		requests = context.database.requests.get(recipient_id, auth.user_id)
+
+		if requests is not None:
 			return response.error("Request already exists")
 
 		request = context.database.requests.create(recipient_id, auth.user_id)
@@ -74,6 +76,29 @@ class DeleteRequest(endpoint.Endpoint):
 
 		deleted = context.database.requests.delete(auth.user_id, user_id)
 		return response.deleted(deleted)
+
+
+class GetRequest(endpoint.Endpoint):
+	auth = True
+	method = http.HTTPMethod.GET
+	path = "/users/@me/requests/{user_id}"
+	query = []
+
+	@staticmethod
+	def run(context: database.Context) -> response.Response:
+		auth = context.get_auth()
+
+		try:
+			user_id = int(context.data["user_id"])
+		except ValueError:
+			return response.error("Invalid user")
+
+		request = context.database.requests.get(auth.user_id, user_id)
+
+		if request is None:
+			return response.error("Invalid user")
+
+		return response.success(request)
 
 
 class ListRequests(endpoint.Endpoint):

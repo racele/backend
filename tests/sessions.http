@@ -6,6 +6,11 @@ DELETE /users/@me/sessions/1
 Authorization: Bearer {{token}}
 Host: {{host}}
 
+### End Session
+DELETE /users/@me/sessions/@me
+Authorization: Bearer {{token}}
+Host: {{host}}
+
 ### List Sessions
 GET /users/@me/sessions
 Authorization: Bearer {{token}}

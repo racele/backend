@@ -2,7 +2,7 @@
 pragma foreign_keys = on;
 
 -- daily
-create table daily (
+create table if not exists daily (
 	date text not null default (date()),
 	language text not null,
 	solution text not null,
@@ -12,7 +12,7 @@ create table daily (
 ) strict;
 
 -- request
-create table request (
+create table if not exists request (
 	accepted_at integer,
 	created_at integer not null default (unixepoch()),
 	recipient_id integer not null references user,
@@ -20,7 +20,7 @@ create table request (
 ) strict;
 
 -- score
-create table score (
+create table if not exists score (
 	created_at integer not null default (unixepoch()),
 	date text,
 	guesses integer not null,
@@ -32,7 +32,7 @@ create table score (
 ) strict;
 
 -- session
-create table session (
+create table if not exists session (
 	created_at integer not null default (unixepoch()),
 	last_used_at integer not null default (unixepoch()),
 	session_id integer primary key,
@@ -41,7 +41,7 @@ create table session (
 ) strict;
 
 -- user
-create table user (
+create table if not exists user (
 	created_at integer not null default (unixepoch()),
 	password text not null,
 	salt text not null,

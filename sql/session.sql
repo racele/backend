@@ -15,6 +15,11 @@ from session
 where session_id = ?
 and user_id = ?;
 
+-- end
+delete
+from session
+where token = ?;
+
 -- list
 select created_at, last_used_at, session_id, user_id
 from session

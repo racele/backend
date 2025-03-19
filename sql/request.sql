@@ -23,8 +23,8 @@ delete
 from request
 where (?, ?) in ((recipient_id, sender_id), (sender_id, recipient_id));
 
--- exists
-select count(*)
+-- get
+select *
 from request
 where (?, ?) in ((recipient_id, sender_id), (sender_id, recipient_id));
 

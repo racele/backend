@@ -18,6 +18,11 @@ DELETE /users/@me/requests/1
 Authorization: Bearer {{token}}
 Host: {{host}}
 
+### Get Request
+GET /users/@me/requests/1
+Authorization: Bearer {{token}}
+Host: {{host}}
+
 ### List Requests (accepted)
 GET /users/@me/requests?status=accepted
 Authorization: Bearer {{token}}

@@ -42,13 +42,13 @@ class RequestTable(table.Table):
 		cursor = self.execute("delete", recipient_id, sender_id)
 		return cursor.rowcount == 1
 
-	def exists(self, recipient_id: int, sender_id: int) -> bool:
-		data = self.fetchone("exists", recipient_id, sender_id)
+	def get(self, recipient_id: int, sender_id: int) -> Request | None:
+		data = self.fetchone("get", recipient_id, sender_id)
 
 		if data is None:
-			return False
+			return None
 
-		return data[0] == 1
+		return Request(*data)
 
 	def received(self, user_id: int) -> list[Request]:
 		data = self.fetchall("received", user_id)

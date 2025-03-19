@@ -39,6 +39,10 @@ class SessionTable(table.Table):
 		cursor = self.execute("delete", session_id, user_id)
 		return cursor.rowcount == 1
 
+	def end(self, token: str) -> bool:
+		cursor = self.execute("end", token)
+		return cursor.rowcount == 1
+
 	def list(self, user_id: int) -> list[Session]:
 		data = self.fetchall("list", user_id)
 		return [Session(*row) for row in data]

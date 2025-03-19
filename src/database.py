@@ -9,8 +9,8 @@ import tables.user
 
 
 class Database:
-	def __init__(self) -> None:
-		connection = sqlite3.connect(":memory:")
+	def __init__(self, data: str) -> None:
+		connection = sqlite3.connect(data, autocommit=True)
 		connection.row_factory = sqlite3.Row
 
 		self.dailies = tables.daily.DailyTable(connection)
