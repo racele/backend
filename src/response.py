@@ -17,7 +17,7 @@ class Response:
 	data: object
 
 
-def deleted(deleted: bool, code: http.HTTPStatus = http.HTTPStatus.BAD_REQUEST) -> Response:
+def deleted(deleted: bool, code: http.HTTPStatus = http.HTTPStatus.OK) -> Response:
 	return Response(code, {"deleted": deleted})
 
 

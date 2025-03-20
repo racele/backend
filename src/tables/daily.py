@@ -15,20 +15,20 @@ class DailyTable(table.Table):
 	table = "daily"
 
 	def get(self, language: str) -> Daily | None:
-		data = self.fetchone("get", language)
+		row = self.fetchone("get", language)
 
-		if data is None:
+		if row is None:
 			return None
 
-		return Daily(*data)
+		return Daily(*row)
 
 	def set(self, language: str, solution: str) -> Daily | None:
 		try:
-			data = self.fetchone("set", language, solution)
+			row = self.fetchone("set", language, solution)
 		except sqlite3.IntegrityError:
 			return None
 
-		if data is None:
+		if row is None:
 			return None
 
-		return Daily(*data)
+		return Daily(*row)

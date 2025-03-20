@@ -10,7 +10,7 @@ import tables.user
 
 class Database:
 	def __init__(self, data: str) -> None:
-		connection = sqlite3.connect(data, autocommit=True)
+		connection = sqlite3.connect(data, autocommit=True, check_same_thread=False)
 		connection.row_factory = sqlite3.Row
 
 		self.dailies = tables.daily.DailyTable(connection)

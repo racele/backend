@@ -10,7 +10,6 @@ import response
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
 	protocol_version = "HTTP/1.1"
-	timeout = 3.0
 
 	def do_DELETE(self) -> None:
 		self.respond(http.HTTPMethod.DELETE)
@@ -38,12 +37,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 		self.respond(http.HTTPMethod.PUT)
 
 	def respond(self, method: http.HTTPMethod) -> None:
-		try:
-			result = self.run(method)
-		except TimeoutError:
-			self.close_connection = True
-			result = response.error("Request timed out", http.HTTPStatus.REQUEST_TIMEOUT)
-
+		result = self.run(method)
 		body = json.dumps(result.data, cls=response.Encoder).encode()
 
 		self.send_response(result.code)
@@ -53,7 +47,10 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 		self.end_headers()
 
 		if method != http.HTTPMethod.HEAD:
-			self.wfile.write(body)
+			try:
+				self.wfile.write(body)
+			except ConnectionError:
+				pass
 
 	def run(self, method: http.HTTPMethod) -> response.Response:
 		if not isinstance(self.server, Server):
@@ -98,7 +95,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 		return response.error("Invalid endpoint", http.HTTPStatus.NOT_FOUND)
 
 
-class Server(http.server.HTTPServer):
+class Server(http.server.ThreadingHTTPServer):
 	def __init__(self, data: str, host: str, port: int) -> None:
 		super().__init__((host, port), RequestHandler)
 

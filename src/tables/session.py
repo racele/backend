@@ -44,13 +44,13 @@ class SessionTable(table.Table):
 		return cursor.rowcount == 1
 
 	def list(self, user_id: int) -> list[Session]:
-		data = self.fetchall("list", user_id)
-		return [Session(*row) for row in data]
+		rows = self.fetchall("list", user_id)
+		return [Session(*row) for row in rows]
 
 	def resolve(self, token: str) -> Auth | None:
-		data = self.fetchone("resolve", token)
+		row = self.fetchone("resolve", token)
 
-		if data is None:
+		if row is None:
 			return None
 
-		return Auth(*data)
+		return Auth(*row)

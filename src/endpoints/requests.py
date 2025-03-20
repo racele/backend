@@ -46,9 +46,9 @@ class CreateRequest(endpoint.Endpoint):
 		if recipient_id == auth.user_id:
 			return response.error("Cannot send a request to yourself")
 
-		requests = context.database.requests.get(recipient_id, auth.user_id)
+		request = context.database.requests.get(recipient_id, auth.user_id)
 
-		if requests is not None:
+		if request is not None:
 			return response.error("Request already exists")
 
 		request = context.database.requests.create(recipient_id, auth.user_id)
